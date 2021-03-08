@@ -19,8 +19,11 @@ firebase.auth().onAuthStateChanged(async function(user) {
         console.log('sign out clicked')
         event.preventDefault
         firebase.auth().signOut()
-        document.location.href = 'index.html'
+        document.location.href = 'login.html'
       })
+
+      // 
+
 
       // listen for the form submit and create new post
 
