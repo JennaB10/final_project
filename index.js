@@ -5,8 +5,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
   if (user) {
     // Signed in
     console.log('signed in')
-
-    
+   
     db.collection('users').doc(user.uid).set({ 
       name: user.displayName,
       email: user.email
@@ -18,6 +17,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
       `
         document.querySelector('.sign-out').addEventListener('click', function(event) {
         console.log('sign out clicked')
+        event.preventDefault
         firebase.auth().signOut()
         document.location.href = 'index.html'
       })
@@ -26,23 +26,53 @@ firebase.auth().onAuthStateChanged(async function(user) {
 
     document.querySelector('form').addEventListener('submit', async function(event) {
       event.preventDefault()
-      let currenteventsText = document.querySelector('#currentevents').value
-      let docRef = await db.collection('currentevents').add({
-          text: currenteventsText
+      let currenteventText = document.querySelector('#currentevent').value
+          let docRef = await db.collection('currentevents').add({
+          text: currenteventText,
+          userId: user.uid       
       })
-      let currenteventsId = docRef.id
-      console.log(`New Icebreaker question with ID ${currenteventsId} created`)
-      renderPost(currenteventsText)
+      let currenteventId = docRef.id
+      console.log(`New Icebreaker question with ID ${currenteventId} created`)
+      
+      //renderPost(currenteventsText)
+      document.querySelector('.currentevents').insertAdjacentHTML('beforeend', `
+      <div class="currentevent-${currenteventId} py-4 text-xl border-b-2 border-purple-500 w-full">
+        <a href="#" class="done p-2 text-sm bg-green-500 text-white">✓</a>
+        ${currenteventText}
+      </div>
+    `)
+
+    document.querySelector(`.currentevent-${currenteventId} .done`).addEventListener('click', async function(event) {
+      event.preventDefault()
+      document.querySelector(`currentevent-${currenteventId}`).classList.add('opacity-20')
+      await db.collection('currentevent').doc(currenteventId).delete()
+    })
+    document.querySelector('#currentevent').value = ''
+
     })
         
     //Render all questions when the page is loaded
-    let querySnapshot = await db.collection('currentevents').get()
+    let querySnapshot = await db.collection('currentevents').where('userId', '==', user.uid).get()
+
     let currentevents = querySnapshot.docs
     for (let i=0; i<currentevents.length; i++) {
-      // let currenteventsId = currentevents[i].id
-      // let currenteventsData = currentevents[i].data()
-       let currenteventsText = currentevents.text
-       renderPost(currenteventsText)
+       let currenteventId = currentevents[i].id
+       let currentevent = currentevents[i].data()
+       let currenteventText = currentevent.text
+      // renderPost(currenteventsText)
+
+       document.querySelector('.currentevents').insertAdjacentHTML('beforeend', `
+       <div class="currentevent-${currenteventId} py-4 text-xl border-b-2 border-purple-500 w-full">
+         <a href="#" class="done p-2 text-sm bg-green-500 text-white">✓</a>
+         ${currenteventText}
+       </div>
+     `)
+ 
+     document.querySelector(`.currentevent-${currenteventId} .done`).addEventListener('click', async function(event) {
+       event.preventDefault()
+       document.querySelector(`.currentevent-${currenteventId}`).classList.add('opacity-20')
+       await db.collection('currentevents').doc(currenteventId).delete()
+     })
     }
    
   } else {
@@ -65,9 +95,9 @@ firebase.auth().onAuthStateChanged(async function(user) {
   }
 })
 
-async function renderPost(currenteventsText) {
+async function renderPost(currenteventText) {
   document.querySelector('.currentevents').insertAdjacentHTML('beforeend', `
-    <div class="post-${currenteventsText} md:mt-16 mt-8 space-y-8">
+    <div class="currentevent-${currenteventText} md:mt-16 mt-8 space-y-8">
  
     `)
  
