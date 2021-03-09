@@ -26,25 +26,27 @@ firebase.auth().onAuthStateChanged(async function (user) {
 
     document.querySelector('form').addEventListener('submit', async function (event) {
       event.preventDefault()
+
       let currenteventText = document.querySelector('#currentevent').value
-      let docRef = await db.collection('currentevents').add({
+
+      let currentevent = await db.collection('currentevents').add({
         text: currenteventText,
         userId: user.uid
       })
-      let currenteventId = docRef.id
-      console.log(`New Icebreaker question with ID ${currenteventId} created`)
+     //let currenteventId = docRef.id
+      console.log(`New Icebreaker question with ID ${currentevent.id} created`)
 
       document.querySelector('.currentevents').insertAdjacentHTML('beforeend', `
-      <div class="currentevent-${currenteventId} py-4 text-xl border-b-2 border-purple-500 w-full">
+      <div class="currentevent-${currentevent.id} py-4 text-xl border-b-2 border-purple-500 w-full">
         <a href="#" class="done p-2 text-sm bg-green-500 text-white">✓</a>
         ${currenteventText}
       </div>
     `)
 
-      document.querySelector(`.currentevent-${currenteventId}`).addEventListener('click', async function (event) {
+      document.querySelector(`.currentevent-${currentevent.id}`).addEventListener('click', async function (event) {
         event.preventDefault()
-        document.querySelector(`currentevent-${currenteventId}`)
-        await db.collection('selected').doc(currenteventId).set({})
+        document.querySelector(`currentevent-${currentevent.id}`)
+        await db.collection('selected').doc(currentevent.id).set({})
       })
       document.querySelector('#currentevent').value = ''
 
