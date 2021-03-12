@@ -32,8 +32,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
        let currenteventId = currentevents[i].id
        let currentevent = currentevents[i].data()
        let currenteventText = currentevent.text
-       let docRef = await db.collection('selected').doc(`${currenteventId}-${user.uid}`)
-       
+       let docRef = await db.collection('selected').doc(`${currenteventId}-${user.uid}`).get()
        let selectedQuestion = docRef.data()
        let opacityClass = ''
        if(selectedQuestion) {
@@ -41,11 +40,9 @@ firebase.auth().onAuthStateChanged(async function(user) {
        }
       // renderPost(currenteventsText)
 
-      // it's something like this put this isn't quite right because it's pulling it many times -->
-      
-     // docRef = await db.collection('selected').add({
-     //   text: currenteventText,
-     //   userId: user.uid     })
+      // docRef = await db.collection('selected').add({
+      // text: currenteventText,
+      // userId: user.uid     })
 
        document.querySelector('.currentevents').insertAdjacentHTML('beforeend', `
        <div class="currentevent-${currenteventId} ${opacityClass} py-4 text-xl border-b-2 border-purple-500 w-full">
@@ -68,8 +65,12 @@ firebase.auth().onAuthStateChanged(async function(user) {
       // } else { // the movie is not watched, watch it
       //   currentElement.classList.add('opacity-20')
     
-       await db.collection('selected').doc(`${currenteventId}-${user.uid}`).set({})  // need to add current event text here somehow but the HTML anchor error?
-     //instead of set //change to selected?
+       await db.collection('selected').add({
+        text: currenteventText, // this isn't exactly right but it's working...
+        userId: user.uid}).doc(`${currenteventId}-${user.uid}`).set({})
+       
+            // need to add current event text here somehow but the HTML anchor error?
+    //instead of set //change to selected?
      // }
       })
     }
