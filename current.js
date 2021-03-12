@@ -41,7 +41,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
       // renderPost(currenteventsText)
 
        document.querySelector('.currentevents').insertAdjacentHTML('beforeend', `
-       <div class="currentevent-${currenteventId}  ${opacityClass} py-4 text-xl border-b-2 border-purple-500 w-full">
+       <div class="currentevent-${currenteventId} ${opacityClass} py-4 text-xl border-b-2 border-purple-500 w-full">
          <a href="#" class="done p-2 text-sm bg-green-500 text-white">✓</a>
          ${currenteventText}
        </div>
@@ -53,9 +53,20 @@ firebase.auth().onAuthStateChanged(async function(user) {
      document.querySelector(`.currentevent-${currenteventId} .done`).addEventListener('click', async function(event) {
        event.preventDefault()
        let currentElement = document.querySelector(`.currentevent-${currenteventId}`)
-       currentElement.classList.add('opacity-20')  //if statement
-       await db.collection('selected').doc(`${currenteventId}-${user.uid}`).set({}) //instead of set //change to selected?
-     })
+       currentElement.classList.add('opacity-20') //if statement
+
+      //  if (currentElement.classList.contains('opacity-20')) { // the movie is watched, un-watch it
+      //   currentElement.classList.remove('opacity-20')
+      //   await db.collection('selected').doc(`${currenteventId}`).delete()
+      // } else { // the movie is not watched, watch it
+      //   currentElement.classList.add('opacity-20')
+    
+       await db.collection('selected').add({
+        text: currenteventText,
+        userId: user.uid       
+    }).doc(`${currenteventId}-${user.uid}`).set({}) //instead of set //change to selected?
+     // }
+      })
     }
 
 
@@ -64,6 +75,9 @@ firebase.auth().onAuthStateChanged(async function(user) {
     document.querySelector('form').addEventListener('submit', async function(event) {
       //event.preventDefault()
       let currenteventText = document.querySelector('#currentevent').value
+
+    //  if(currenteventText.length > 0){
+      
           let docRef = await db.collection('currentevents').add({
           text: currenteventText,
           userId: user.uid       
@@ -83,10 +97,25 @@ firebase.auth().onAuthStateChanged(async function(user) {
       event.preventDefault()
       let currentElement = document.querySelector(`.currentevent-${currenteventId}`)
       currentElement.classList.add('opacity-20') 
-      await db.collection('selected').doc(`${currenteventId}-${user.uid}`).set({}) //doc combination current id-yourid
-    }) 
-    //document.querySelector('#currentevent').value = ''
+      await db.collection('selected').add({
+        text: currenteventText,
+        userId: user.uid       
+    }).doc(`${currenteventId}-${user.uid}`).set({}) //doc combination current id-yourid
 
+      // document.querySelector(`.post-${postId} .like-button`).addEventListener('click', async function(event) {
+      //   event.preventDefault()
+      //   console.log(`post ${postId} like button clicked!`)
+      //   let existingNumberOfLikes = document.querySelector(`.post-${postId} .likes`).innerHTML
+      //   let newNumberOfLikes = parseInt(existingNumberOfLikes) + 1
+      //   document.querySelector(`.post-${postId} .likes`).innerHTML = newNumberOfLikes
+      //   await db.collection('posts').doc(postId).update({
+      //     likes: firebase.firestore.FieldValue.increment(1)
+
+
+
+    }) 
+   // document.querySelector('#currentevent').value = ''
+ // }
     })
 
 
