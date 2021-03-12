@@ -32,13 +32,20 @@ firebase.auth().onAuthStateChanged(async function(user) {
        let currenteventId = currentevents[i].id
        let currentevent = currentevents[i].data()
        let currenteventText = currentevent.text
-       let docRef = await db.collection('selected').doc(`${currenteventId}-${user.uid}`).get()
+       let docRef = await db.collection('selected').doc(`${currenteventId}-${user.uid}`)
+       
        let selectedQuestion = docRef.data()
        let opacityClass = ''
        if(selectedQuestion) {
          opacityClass = 'opacity-20'
        }
       // renderPost(currenteventsText)
+
+      // it's something like this put this isn't quite right because it's pulling it many times -->
+      
+     // docRef = await db.collection('selected').add({
+     //   text: currenteventText,
+     //   userId: user.uid     })
 
        document.querySelector('.currentevents').insertAdjacentHTML('beforeend', `
        <div class="currentevent-${currenteventId} ${opacityClass} py-4 text-xl border-b-2 border-purple-500 w-full">
@@ -61,10 +68,8 @@ firebase.auth().onAuthStateChanged(async function(user) {
       // } else { // the movie is not watched, watch it
       //   currentElement.classList.add('opacity-20')
     
-       await db.collection('selected').add({
-        text: currenteventText,
-        userId: user.uid       
-    }).doc(`${currenteventId}-${user.uid}`).set({}) //instead of set //change to selected?
+       await db.collection('selected').doc(`${currenteventId}-${user.uid}`).set({})  // need to add current event text here somehow but the HTML anchor error?
+     //instead of set //change to selected?
      // }
       })
     }
@@ -97,10 +102,8 @@ firebase.auth().onAuthStateChanged(async function(user) {
       event.preventDefault()
       let currentElement = document.querySelector(`.currentevent-${currenteventId}`)
       currentElement.classList.add('opacity-20') 
-      await db.collection('selected').add({
-        text: currenteventText,
-        userId: user.uid       
-    }).doc(`${currenteventId}-${user.uid}`).set({}) //doc combination current id-yourid
+      await db.collection('selected').doc(`${currenteventId}-${user.uid}`).set({})
+    //doc combination current id-yourid
 
       // document.querySelector(`.post-${postId} .like-button`).addEventListener('click', async function(event) {
       //   event.preventDefault()
