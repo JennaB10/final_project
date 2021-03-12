@@ -48,8 +48,8 @@ firebase.auth().onAuthStateChanged(async function(user) {
        <div class="currentevent-${currenteventId} ${opacityClass} py-4 text-xl border-b-2 border-purple-500 w-full">
          <a href="#" class="done p-2 text-sm bg-green-500 text-white">✓</a>
          ${currenteventText}
-       </div>
-     `) //after this line check if opacity needed
+       </div> 
+     `) //after this line check if opacity needed //maybe we can 
      
      //if statement - check database for currenteventid-userid 
      //if found, then ad opacity (same as 79)
@@ -65,14 +65,18 @@ firebase.auth().onAuthStateChanged(async function(user) {
       // } else { // the movie is not watched, watch it
       //   currentElement.classList.add('opacity-20')
     
-       await db.collection('selected').add({
-        text: currenteventText, // this isn't exactly right but it's working...
-        userId: user.uid}).doc(`${currenteventId}-${user.uid}`).set({})
-       
+       await db.collection('selected').doc(`${currenteventId}-${user.uid}`).set({
+        text: currenteventText,
+        userId: user.uid       
+    })
+     })
+      // document.querySelector('#currentevent').value = ''
+     
             // need to add current event text here somehow but the HTML anchor error?
     //instead of set //change to selected?
      // }
-      })
+      
+
     }
 
 
