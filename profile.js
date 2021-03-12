@@ -22,7 +22,38 @@ firebase.auth().onAuthStateChanged(async function (user) {
       document.location.href = 'login.html'
     })
 
-    
+    let querySnapshot = await db.collection('selected').where('userId', '==', user.uid).get()
+
+    let currentevents = querySnapshot.docs
+    for (let i=0; i<currentevents.length; i++) {
+       let currenteventId = currentevents[i].id
+       let currentevent = currentevents[i].data()
+       let currenteventText = currentevent.text
+       let docRef = await db.collection('selected').doc(`${currenteventId}-${user.uid}`).get()
+       let selectedQuestion = docRef.data()
+       let opacityClass = ''
+       if(selectedQuestion) {
+         opacityClass = 'opacity-20'
+       }
+      // renderPost(currenteventsText)
+
+       document.querySelector('.currentevents').insertAdjacentHTML('beforeend', `
+       <div class="currentevent-${currenteventId}  ${opacityClass} py-4 text-xl border-b-2 border-purple-500 w-full">
+         <a href="#" class="done p-2 text-sm bg-green-500 text-white">✓</a>
+         ${currenteventText}
+       </div>
+     `) //after this line check if opacity needed
+     
+     //if statement - check database for currenteventid-userid 
+     //if found, then ad opacity (same as 79)
+
+     document.querySelector(`.currentevent-${currenteventId} .done`).addEventListener('click', async function(event) {
+       event.preventDefault()
+       let currentElement = document.querySelector(`.currentevent-${currenteventId}`)
+       currentElement.classList.add('opacity-20')  //if statement
+       await db.collection('selected').doc(`${currenteventId}-${user.uid}`).set({}) //instead of set //change to selected?
+     })
+    }
 
 //  // Show only my to-dos
 //  let response = await fetch(`/.netlify/functions/get_todos?userId=${user.uid}`)
