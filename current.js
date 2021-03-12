@@ -23,49 +23,25 @@ firebase.auth().onAuthStateChanged(async function(user) {
       })
 
       // 
-
-
-      // listen for the form submit and create new post
-
-    document.querySelector('form').addEventListener('submit', async function(event) {
-      event.preventDefault()
-      let currenteventText = document.querySelector('#currentevent').value
-          let docRef = await db.collection('currentevents').add({
-          text: currenteventText,
-          userId: user.uid       
-      })
-      let currenteventId = docRef.id
-      console.log(`New Icebreaker question with ID ${currenteventId} created`)
-      
-      //renderPost(currenteventsText)
-      document.querySelector('.currentevents').insertAdjacentHTML('beforeend', `
-      <div class="currentevent-${currenteventId} py-4 text-xl border-b-2 border-purple-500 w-full">
-        <a href="#" class="done p-2 text-sm bg-green-500 text-white">✓</a>
-        ${currenteventText}
-      </div>
-    `)
-
-    document.querySelector(`.currentevent-${currenteventId} .done`).addEventListener('click', async function(event) {
-      event.preventDefault()
-      document.querySelector(`.currentevent-${currenteventId}`).classList.add('opacity-20')  
-      await db.collection('currentevent').doc(`${currenteventId}-${user.uid}`).set({}) //doc combination current id-yourid
-    }) 
-    document.querySelector('#currentevent').value = ''
-
-    })
-        
+              
     //Render all questions when the page is loaded
-    let querySnapshot = await db.collection('currentevents').where('userId', '==', user.uid).get()
+    let querySnapshot = await db.collection('currentevents').get()
 
     let currentevents = querySnapshot.docs
     for (let i=0; i<currentevents.length; i++) {
        let currenteventId = currentevents[i].id
        let currentevent = currentevents[i].data()
        let currenteventText = currentevent.text
+       let docRef = await db.collection('selected').doc(`${currenteventId}-${user.uid}`).get()
+       let selectedQuestion = docRef.data()
+       let opacityClass = ''
+       if(selectedQuestion) {
+         opacityClass = 'opacity-20'
+       }
       // renderPost(currenteventsText)
 
        document.querySelector('.currentevents').insertAdjacentHTML('beforeend', `
-       <div class="currentevent-${currenteventId} py-4 text-xl border-b-2 border-purple-500 w-full">
+       <div class="currentevent-${currenteventId}  ${opacityClass} py-4 text-xl border-b-2 border-purple-500 w-full">
          <a href="#" class="done p-2 text-sm bg-green-500 text-white">✓</a>
          ${currenteventText}
        </div>
@@ -76,10 +52,43 @@ firebase.auth().onAuthStateChanged(async function(user) {
 
      document.querySelector(`.currentevent-${currenteventId} .done`).addEventListener('click', async function(event) {
        event.preventDefault()
-       document.querySelector(`.currentevent-${currenteventId}`).classList.add('opacity-20') //if statement
-       await db.collection('currentevents').doc(`${currenteventId}-${user.uid}`).set({}) //instead of set
+       let currentElement = document.querySelector(`.currentevent-${currenteventId}`)
+       currentElement.classList.add('opacity-20')  //if statement
+       await db.collection('selected').doc(`${currenteventId}-${user.uid}`).set({}) //instead of set //change to selected?
      })
     }
+
+
+      // listen for the form submit and create new post
+
+    document.querySelector('form').addEventListener('submit', async function(event) {
+      //event.preventDefault()
+      let currenteventText = document.querySelector('#currentevent').value
+          let docRef = await db.collection('currentevents').add({
+          text: currenteventText,
+          userId: user.uid       
+      })
+      let currenteventId = docRef.id
+      console.log(`New Icebreaker question with ID ${currenteventId} created`)
+      
+      //renderPost(currenteventsText)
+      document.querySelector('.currentevents').insertAdjacentHTML('beforeend', `
+      <div class="currentevent-${currenteventId} ${opacityClass} py-4 text-xl border-b-2 border-purple-500 w-full">
+        <a href="#" class="done p-2 text-sm bg-green-500 text-white">✓</a>
+        ${currenteventText}
+      </div>
+    `)
+
+    document.querySelector(`.currentevent-${currenteventId} .done`).addEventListener('click', async function(event) {
+      event.preventDefault()
+      let currentElement = document.querySelector(`.currentevent-${currenteventId}`)
+      currentElement.classList.add('opacity-20') 
+      await db.collection('selected').doc(`${currenteventId}-${user.uid}`).set({}) //doc combination current id-yourid
+    }) 
+    //document.querySelector('#currentevent').value = ''
+
+    })
+
 
   } else {
     // Signed out
