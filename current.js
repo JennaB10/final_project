@@ -47,9 +47,9 @@ firebase.auth().onAuthStateChanged(async function(user) {
 
     document.querySelector(`.currentevent-${currenteventId} .done`).addEventListener('click', async function(event) {
       event.preventDefault()
-      document.querySelector(`currentevent-${currenteventId}`).classList.add('opacity-20')
-      await db.collection('currentevent').doc(currenteventId).delete()
-    })
+      document.querySelector(`.currentevent-${currenteventId}`).classList.add('opacity-20')  
+      await db.collection('currentevent').doc(`${currenteventId}-${user.uid}`).set({}) //doc combination current id-yourid
+    }) 
     document.querySelector('#currentevent').value = ''
 
     })
@@ -69,15 +69,18 @@ firebase.auth().onAuthStateChanged(async function(user) {
          <a href="#" class="done p-2 text-sm bg-green-500 text-white">✓</a>
          ${currenteventText}
        </div>
-     `)
- 
+     `) //after this line check if opacity needed
+     
+     //if statement - check database for currenteventid-userid 
+     //if found, then ad opacity (same as 79)
+
      document.querySelector(`.currentevent-${currenteventId} .done`).addEventListener('click', async function(event) {
        event.preventDefault()
-       document.querySelector(`.currentevent-${currenteventId}`).classList.add('opacity-20')
-       await db.collection('currentevents').doc(currenteventId).delete()
+       document.querySelector(`.currentevent-${currenteventId}`).classList.add('opacity-20') //if statement
+       await db.collection('currentevents').doc(`${currenteventId}-${user.uid}`).set({}) //instead of set
      })
     }
-   
+
   } else {
     // Signed out
     console.log('signed out')
