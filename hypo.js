@@ -30,7 +30,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
     document.querySelector('form').addEventListener('submit', async function(event) {
       event.preventDefault()
       let hypotheticaleventText = document.querySelector('#hypotheticalevent').value
-          let docRef = await db.collection('hypotheticalevents').add({
+          let docRef = await db.collection('hypotheticalevents').set({
           text: hypotheticaleventText,
           userId: user.uid       
       })
@@ -48,7 +48,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
     document.querySelector(`.hypotheticalevent-${hypotheticaleventId} .done`).addEventListener('click', async function(event) {
       event.preventDefault()
       document.querySelector(`hypotheticalevent-${hypotheticaleventId}`).classList.add('opacity-20')
-      await db.collection('hypotheticalevent').doc(hypotheticaleventId).delete()
+      await db.collection('hypotheticalevent').doc(`${hypotheticaleventId}-${user.uid}`).set({})
     })
     document.querySelector('#hypotheticalevent').value = ''
 
@@ -74,7 +74,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
      document.querySelector(`.hypotheticalevent-${hypotheticaleventId} .done`).addEventListener('click', async function(event) {
        event.preventDefault()
        document.querySelector(`.hypotheticalevent-${hypotheticaleventId}`).classList.add('opacity-20')
-       await db.collection('hypotheticalevents').doc(hypotheticaleventId).delete()
+       await db.collection('hypotheticalevents').doc(`${hypotheticaleventId}-${user.uid}`).set({})
      })
     }
    
