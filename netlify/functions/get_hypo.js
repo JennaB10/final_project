@@ -3,7 +3,7 @@ let firebase = require('./firebase')
 exports.handler = async function(event) {
     // console.log()
     console.log(event)
-    let queryStringUserID = event.queryStringParameters.userId
+    let queryStringUserId = event.queryStringParameters.userId
 
     let hypotheticalData = []
 
