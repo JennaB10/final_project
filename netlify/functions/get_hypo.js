@@ -3,7 +3,7 @@ let firebase = require('./firebase/')
 exports.handler = async function(event) {
     console.log()
 
-    let hypothetical = []
+    let hypotheticalData = []
     let db = firebase.firestore() //talk to the database
     let querySnapshot = await db.collection('hypothetical').get()
     console.log(`number of hypothetical: ${querySnapshot.size}`)
@@ -16,7 +16,7 @@ exports.handler = async function(event) {
         // console.log(hypothetical)
 
         // push hypothetical 
-        hypothetical.push()({
+        hypotheticalData.push()({
            id: hypotheticalId,
            test: hypothetical.text 
         })
