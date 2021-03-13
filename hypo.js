@@ -30,10 +30,11 @@ firebase.auth().onAuthStateChanged(async function(user) {
     document.querySelector('form').addEventListener('submit', async function(event) {
       event.preventDefault()
       let hypotheticaleventText = document.querySelector('#hypotheticalevent').value
-          let docRef = await db.collection('hypotheticalevents').set({
+          let docRef = await db.collection('hypothetical').add({
           text: hypotheticaleventText,
           userId: user.uid       
       })
+
       let hypotheticaleventId = docRef.id
       console.log(`New Icebreaker question with ID ${hypotheticaleventId} created`)
       
