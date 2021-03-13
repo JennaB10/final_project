@@ -47,7 +47,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
 
     document.querySelector(`.hypotheticalevent-${hypotheticaleventId} .done`).addEventListener('click', async function(event) {
       event.preventDefault()
-      document.querySelector(`hypotheticalevent-${hypotheticaleventId}`).classList.add('opacity-20')
+      document.querySelector(`.hypotheticalevent-${hypotheticaleventId}`).classList.add('opacity-20')
       await db.collection('hypotheticalevent').doc(`${hypotheticaleventId}-${user.uid}`).set({})
     })
     document.querySelector('#hypotheticalevent').value = ''
