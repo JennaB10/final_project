@@ -3,7 +3,10 @@ exports.handler = async function(event) {
     return {
         status: 200
         body: JSON.stringify({
-            thingToKnow: 'KIEI-451 is awesome' //whatever is in here, this is what comes up. JS response
+            thingToKnow: 'KIEI-451 is awesome' //whatever is in here, this is what comes up. JS response. 
         })
     }
 }
+
+//check in console
+//let todosSnapshot = await firebase.firestore().collection('todos').get()
