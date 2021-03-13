@@ -16,3 +16,9 @@ if (!firebase.apps.length) {
 //please update
 
 module.exports = firebase
+
+
+// async function getTodos() {
+//   let querySnapshot = await debugger.collection('todos').get()
+//   return querySnapshot.docs
+// }
