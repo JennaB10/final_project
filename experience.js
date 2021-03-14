@@ -28,7 +28,7 @@ firebase.auth().onAuthStateChanged(async function (user) {
     let lifeexperiences = querySnapshot.docs
     for (let i = 0; i < lifeexperiences.length; i++) {
       let lifeexperienceId = lifeexperiences[i].id
-      let lifeexperience = lifeexperience[i].data()
+      let lifeexperience = lifeexperiences[i].data()
       let lifeexperienceText = lifeexperience.text
       let docRef = await db.collection('selected').doc(`${lifeexperienceId}-${user.uid}`).get()
       let selectedQuestion = docRef.data()
