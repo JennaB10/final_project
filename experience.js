@@ -52,7 +52,7 @@ firebase.auth().onAuthStateChanged(async function (user) {
       document.querySelector(`.lifeexperience-${lifeexperienceId}`).addEventListener('click', async function (event) {
         event.preventDefault()
         let lifeElement = document.querySelector(`.lifeexperience-${lifeexperienceId}`)
-        currentElement.classList.add('opacity-20')
+        lifeElement.classList.add('opacity-20')
         await db.collection('selected').doc(`${lifeexperienceId}-${user.uid}`).set({
           text: lifeexperienceText,
           userId: user.uid    
