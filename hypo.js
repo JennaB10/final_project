@@ -51,7 +51,7 @@ for (let i=0; i<hypotheticalevents.length; i++) {
    hypotheticalElement.classList.add('opacity-20')
 
    await db.collection('selected').doc(`${hypotheticaleventId}-${user.uid}`).set({ 
-    text: currenteventText,
+    text: hypotheticaleventText,
     userId: user.uid })
  })
 }
