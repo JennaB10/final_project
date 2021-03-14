@@ -40,10 +40,10 @@ firebase.auth().onAuthStateChanged(async function (user) {
       // renderPost(currenteventsText)
 
       document.querySelector('.lifeexperiences').insertAdjacentHTML('beforeend', `
-       <div class="lifeexperience-${lifeexperienceId} ${opacityClass} py-4 text-xl border-b-2 border-purple-500 w-full">
-         <a href="#" class="done p-2 text-sm bg-green-500 text-white">✓</a>
-         ${lifeexperienceText}
-       </div>
+      <div class="lifeexperience-${lifeexperienceId} ${opacityClass} py-4 text-xl border-b-2 border-purple-500 w-full">
+        <a href="#" class="done p-2 text-sm bg-green-500 text-white">✓</a>
+        ${lifeexperienceText}
+      </div> 
      `)
 
       //  //add event listener for click week 6
@@ -67,11 +67,12 @@ firebase.auth().onAuthStateChanged(async function (user) {
 
       let lifeexperienceText = document.querySelector('#lifeexperience').value
 
-      let lifeexperience = await db.collection('lifeexperiences').add({
+      let docRef = await db.collection('lifeexperiences').add({
         text: lifeexperienceText,
         userId: user.uid
       })
      //let currenteventId = docRef.id
+     let lifeexperienceId = docRef.id
       console.log(`New Icebreaker question with ID ${lifeexperienceId} created`)
 
       document.querySelector('.lifeexperiences').insertAdjacentHTML('beforeend', `
