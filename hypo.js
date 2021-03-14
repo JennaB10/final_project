@@ -1,8 +1,10 @@
 firebase.auth().onAuthStateChanged(async function(user) {
   let db = firebase.firestore()
+
   if (user) {
     // Signed in
     console.log('signed in')
+
     db.collection('users').doc(user.uid).set({ 
       name: user.displayName,
       email: user.email
@@ -18,11 +20,48 @@ firebase.auth().onAuthStateChanged(async function(user) {
         document.location.href = 'login.html'
       })
       // 
+//Render all questions when the page is loaded
+let querySnapshot = await db.collection('hypotheticalevents').get()
+
+let hypotheticalevents = querySnapshot.docs
+for (let i=0; i<hypotheticalevents.length; i++) {
+   let hypotheticaleventId = hypotheticalevents[i].id
+   let hypotheticalevent = hypotheticalevents[i].data()
+   let hypotheticaleventText = hypotheticalevent.text
+   let docRef = await db.collection('selected').doc(`${hypotheticaleventId}-${user.uid}`).get()
+   let selectedQuestion = docRef.data()
+   let opacityClass = ''
+   if(selectedQuestion) {
+     opacityClass = 'opacity-20'
+   }
+ 
+   // renderPost(hypotheticaleventsText)
+   document.querySelector('.hypotheticalevents').insertAdjacentHTML('beforeend', `
+   <div class="hypotheticalevent-${hypotheticaleventId} ${opacityClass}  py-4 text-xl border-b-2 border-purple-500 w-full">
+     <a href="#" class="done p-2 text-sm bg-green-500 text-white">✓</a>
+     ${hypotheticaleventText}
+   </div>
+ `)
+
+ //if statement - check database for currenteventid-userid 
+ //if found, then ad opacity (same as 79)
+ document.querySelector(`.hypotheticalevent-${hypotheticaleventId} .done`).addEventListener('click', async function(event) {
+   event.preventDefault()
+   let hypotheticalElement = document.querySelector(`.hypotheticalevent-${hypotheticaleventId}`)
+   hypotheticalElement.classList.add('opacity-20')
+
+   await db.collection('selected').doc(`${hypotheticaleventId}-${user.uid}`).set({ 
+    text: currenteventText,
+    userId: user.uid })
+ })
+}
+
+
       // listen for the form submit and create new post
     document.querySelector('form').addEventListener('submit', async function(event) {
-      event.preventDefault()
+    //  event.preventDefault()
       let hypotheticaleventText = document.querySelector('#hypotheticalevent').value
-          let docRef = await db.collection('hypothetical').add({
+          let docRef = await db.collection('hypotheticalevents').add({
           text: hypotheticaleventText,
           userId: user.uid       
       })
@@ -31,40 +70,20 @@ firebase.auth().onAuthStateChanged(async function(user) {
       console.log(`New Icebreaker question with ID ${hypotheticaleventId} created`)
       //renderPost(hypotheticaleventsText)
       document.querySelector('.hypotheticalevents').insertAdjacentHTML('beforeend', `
-      <div class="hypotheticalevent-${hypotheticaleventId} py-4 text-xl border-b-2 border-purple-500 w-full">
+      <div class="hypotheticalevent-${hypotheticaleventId} ${opacityClass} py-4 text-xl border-b-2 border-purple-500 w-full">
         <a href="#" class="done p-2 text-sm bg-green-500 text-white">✓</a>
         ${hypotheticaleventText}
       </div>
     `)
     document.querySelector(`.hypotheticalevent-${hypotheticaleventId} .done`).addEventListener('click', async function(event) {
       event.preventDefault()
-      document.querySelector(`.hypotheticalevent-${hypotheticaleventId}`).classList.add('opacity-20')
-      await db.collection('hypotheticalevent').doc(`${hypotheticaleventId}-${user.uid}`).set({})
+     let hypotheticalElement = document.querySelector(`.hypotheticalevent-${hypotheticaleventId}`)
+     hypotheticalElement.classList.add('opacity-20')
+      await db.collection('selected').doc(`${hypotheticaleventId}-${user.uid}`).set({})
     })
-    document.querySelector('#hypotheticalevent').value = ''
-    })
-    //Render all questions when the page is loaded
-    let querySnapshot = await db.collection('hypotheticalevents').where('userId', '==', user.uid).get()
-    let hypotheticalevents = querySnapshot.docs
-    for (let i=0; i<hypotheticalevents.length; i++) {
-       let hypotheticaleventId = hypotheticalevents[i].id
-       let hypotheticalevent = hypotheticalevents[i].data()
-       let hypotheticaleventText = hypotheticalevent.text
-      // renderPost(hypotheticaleventsText)
-       document.querySelector('.hypotheticalevents').insertAdjacentHTML('beforeend', `
-       <div class="hypotheticalevent-${hypotheticaleventId} py-4 text-xl border-b-2 border-purple-500 w-full">
-         <a href="#" class="done p-2 text-sm bg-green-500 text-white">✓</a>
-         ${hypotheticaleventText}
-       </div>
-     `)//after this line check if opacity needed
-     //if statement - check database for currenteventid-userid 
-     //if found, then ad opacity (same as 79)
-     document.querySelector(`.hypotheticalevent-${hypotheticaleventId} .done`).addEventListener('click', async function(event) {
-       event.preventDefault()
-       document.querySelector(`.hypotheticalevent-${hypotheticaleventId}`).classList.add('opacity-20')
-       await db.collection('selected').doc(`${hypotheticaleventId}-${user.uid}`).set({})
+    // document.querySelector('#hypotheticalevent').value = ''
      })
-    }
+    
   } else {
     // Signed out
     console.log('signed out')
