@@ -22,10 +22,11 @@ firebase.auth().onAuthStateChanged(async function(user) {
     document.querySelector('form').addEventListener('submit', async function(event) {
       event.preventDefault()
       let hypotheticaleventText = document.querySelector('#hypotheticalevent').value
-          let docRef = await db.collection('hypotheticalevents').add({
+          let docRef = await db.collection('hypothetical').add({
           text: hypotheticaleventText,
           userId: user.uid       
       })
+
       let hypotheticaleventId = docRef.id
       console.log(`New Icebreaker question with ID ${hypotheticaleventId} created`)
       //renderPost(hypotheticaleventsText)
@@ -38,7 +39,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
     document.querySelector(`.hypotheticalevent-${hypotheticaleventId} .done`).addEventListener('click', async function(event) {
       event.preventDefault()
       document.querySelector(`.hypotheticalevent-${hypotheticaleventId}`).classList.add('opacity-20')
-      await db.collection('selected').doc(`${hypotheticaleventId}-${user.uid}`).set({})
+      await db.collection('hypotheticalevent').doc(`${hypotheticaleventId}-${user.uid}`).set({})
     })
     document.querySelector('#hypotheticalevent').value = ''
     })
