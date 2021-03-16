@@ -30,8 +30,8 @@ for (let i=0; i<hypotheticalevents.length; i++) {
    let hypotheticaleventId = hypotheticalevents[i].id
    let hypotheticalevent = hypotheticalevents[i].data()
    let hypotheticaleventText = hypotheticalevent.text
-   let docRef = await db.collection('selected').doc(`${hypotheticaleventId}-${user.uid}`).get()
-   let selectedQuestion = docRef.data()
+  //  let docRef = await db.collection('selected').doc(`${hypotheticaleventId}-${user.uid}`).get() not sure we need lines 33 if we have defined in 24
+  let selectedQuestion = response.data() //docRef with response
    let opacityClass = ''
    if(selectedQuestion) {
      opacityClass = 'opacity-20'
@@ -52,10 +52,10 @@ for (let i=0; i<hypotheticalevents.length; i++) {
    let hypotheticalElement = document.querySelector(`.hypotheticalevent-${hypotheticaleventId}`)
    hypotheticalElement.classList.add('opacity-20')
 
-   await db.collection('selected').doc(`${hypotheticaleventId}-${user.uid}`).set({ 
-    text: hypotheticaleventText,
-    userId: user.uid })
- })
+    await db.collection('selected').doc(`${hypotheticaleventId}-${user.uid}`).set({ 
+     text: hypotheticaleventText,
+     userId: user.uid })
+  })
 }
 
 
