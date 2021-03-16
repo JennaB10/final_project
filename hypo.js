@@ -1,14 +1,14 @@
 firebase.auth().onAuthStateChanged(async function(user) {
-  let db = firebase.firestore()
+ let db = firebase.firestore()
 
   if (user) {
     // Signed in
     console.log('signed in')
 
-    db.collection('users').doc(user.uid).set({ 
-      name: user.displayName,
-      email: user.email
-    })
+   // db.collection('users').doc(user.uid).set({ 
+   //   name: user.displayName,
+   //   email: user.email
+  //  })
         // Create a sign-out button
         document.querySelector('.sign-in-or-sign-out').innerHTML = `
         <button class="text-pink-500 underline sign-out">Sign Out</button>
@@ -21,9 +21,10 @@ firebase.auth().onAuthStateChanged(async function(user) {
       })
       // 
 //Render all questions when the page is loaded
-let querySnapshot = await db.collection('hypotheticalevents').get()
+let response = await fetch(`/.netlify/functions/get_hypo?userId=${user.uid}`)
+let hypotheticalevents = await response.json()
 
-let hypotheticalevents = querySnapshot.docs
+//let hypotheticalevents = querySnapshot.docs
 for (let i=0; i<hypotheticalevents.length; i++) {
    let hypotheticaleventId = hypotheticalevents[i].id
    let hypotheticalevent = hypotheticalevents[i].data()
@@ -61,10 +62,14 @@ for (let i=0; i<hypotheticalevents.length; i++) {
     document.querySelector('form').addEventListener('submit', async function(event) {
     //  event.preventDefault()
       let hypotheticaleventText = document.querySelector('#hypotheticalevent').value
-          let docRef = await db.collection('hypotheticalevents').add({
-          text: hypotheticaleventText,
-          userId: user.uid       
-      })
+          let response = await fetch(`/.netlify/functions/create_hypo`, { //create a new netlify for create
+          method: 'POST',
+          body: JSON.stringify({ // JSON has data in it if you want to send it to netlify then need to use stringify
+             //the one on the left is what the post itself will expect and the one on the right is whatever you named the variable
+            UserId: user.uid, //can call all of these whatever we want we just need to call it on the other side in our lamda function (create_posts.js) //uid is a unique identifier
+            
+          })
+        })
 
       let hypotheticaleventId = docRef.id
       console.log(`New Icebreaker question with ID ${hypotheticaleventId} created`)
@@ -105,3 +110,14 @@ async function renderPost(hypotheticaleventText) {
     <div class="hypotheticalevent-${hypotheticaleventText} md:mt-16 mt-8 space-y-8">
     `)
 }
+
+
+
+
+
+
+
+
+
+
+

@@ -8,12 +8,9 @@ exports.handler = async function(event) {
     
    let queryStringUserId = event.queryStringParameters.userId
 
-    let querySnapshot = await db.collection('hypotheticalevents')
+    let querySnapshot = await db.collection('hypotheticalevents') 
                                 .where('userId', '==', queryStringUserId)
-                                .add({
-                                    text: hypotheticaleventText,
-                                    userId: user.uid       
-                                })
+                                .get()
                           
    console.log(`number of hypotheticalevents: ${querySnapshot.size}`)
 
@@ -25,7 +22,7 @@ exports.handler = async function(event) {
         // console.log(hypothetical)
 
         // push hypothetical 
-        hypotheticalData.push({
+        hypotheticaleventsData.push({
            id: hypotheticaleventId,
            text: hypotheticalevent.text 
         })
