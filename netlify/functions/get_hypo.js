@@ -6,10 +6,10 @@ exports.handler = async function(event) {
     let db = firebase.firestore()
     let hypotheticaleventsData = []
     
-   let queryStringUserId = event.queryStringParameters.userId
+   // let queryStringUserId = event.queryStringParameters.userId
 
     let querySnapshot = await db.collection('hypotheticalevents') 
-                                .where('userId', '==', queryStringUserId)
+                               // .where('userId', '==', queryStringUserId)
                                 .get()
                           
    console.log(`number of hypotheticalevents: ${querySnapshot.size}`)
