@@ -2,33 +2,38 @@ let firebase = require('./firebase')
 
 exports.handler = async function(event) {
     // console.log()
-    console.log(event)
-    let queryStringUserId = event.queryStringParameters.userId
+    console.log(event)    
+    let db = firebase.firestore()
+    let hypotheticaleventsData = []
+    
+   let queryStringUserId = event.queryStringParameters.userId
 
-    let hypotheticalData = []
-
-    let db = firebase.firestore() //talk to the database
-    let querySnapshot = await db.collection('hypothetical')
+    let querySnapshot = await db.collection('hypotheticalevents')
                                 .where('userId', '==', queryStringUserId)
-                                .get()
-    console.log(`number of hypothetical: ${querySnapshot.size}`)
+                                .add({
+                                    text: hypotheticaleventText,
+                                    userId: user.uid       
+                                })
+                          
+   console.log(`number of hypotheticalevents: ${querySnapshot.size}`)
 
     //return  data
-    let hypotheticals = querySnapshot.docs
-    for(let i = 0; i < hypotheticals.length; i++) {
-        let hypotheticalId = hypotheticals[i].id 
-        let hypothetical = hypotheticals[i].data()
+    let hypotheticalevents = querySnapshot.docs
+    for(let i = 0; i < hypotheticalevents.length; i++) {
+        let hypotheticaleventId = hypotheticalevents[i].id 
+        let hypotheticalevent = hypotheticalevents[i].data()
         // console.log(hypothetical)
 
         // push hypothetical 
-        hypotheticalData.push()({
-           id: hypotheticalId,
-           text: hypothetical.text 
+        hypotheticalData.push({
+           id: hypotheticaleventId,
+           text: hypotheticalevent.text 
         })
     }
 
     return {
         statusCode: 200,
-        body: JSON.stringify(hypotheticalData)
+        body: JSON.stringify(hypotheticaleventsData)
+        
     }
 }
