@@ -21,7 +21,8 @@ firebase.auth().onAuthStateChanged(async function(user) {
       })
       // 
 //Render all questions when the page is loaded
-let response = await fetch(`/.netlify/functions/get_hypo?userId=${user.uid}`)
+let response = await fetch(`/.netlify/functions/get_hypo`)
+//let response = await fetch(`/.netlify/functions/get_hypo?userId=${user.uid}`) //use this for profile
 let hypotheticalevents = await response.json()
 
 //let hypotheticalevents = querySnapshot.docs
