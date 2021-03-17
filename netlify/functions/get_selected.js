@@ -3,10 +3,11 @@ let firebase = require('./firebase')
 exports.handler = async function(event) {
     // console.log()
     console.log(event)    
-    let db = firebase.firestore()
-    let selectedQuestionsData = []
-    
+     
    let queryStringUserId = event.queryStringParameters.userId
+
+   let selectedQuestionData = []
+   let db = firebase.firestore()
 
     let querySnapshot = await db.collection('selected') 
                                 .where('userId', '==', queryStringUserId)
@@ -17,12 +18,12 @@ exports.handler = async function(event) {
     //return  data
     let selectedQuestions = querySnapshot.docs
     for(let i = 0; i < selectedQuestions.length; i++) {
-        let selectedQuestionId = selectedQuestionss[i].id 
-        let selectedQuestion = selectedQuestionss[i].data()
+        let selectedQuestionId = selectedQuestions[i].id 
+        let selectedQuestion = selectedQuestions[i].data()
         // console.log(hypothetical)
 
         // push hypothetical 
-        selectedQuestionssData.push({
+        selectedQuestionData.push({
            id: selectedQuestionId,
            text: selectedQuestion.text 
         })
@@ -30,7 +31,7 @@ exports.handler = async function(event) {
 
     return {
         statusCode: 200,
-        body: JSON.stringify(selectedQuestionsData)
+        body: JSON.stringify(selectedQuestionData)
         
     }
 }

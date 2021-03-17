@@ -22,8 +22,8 @@ firebase.auth().onAuthStateChanged(async function(user) {
       // 
 //Render all questions when the page is loaded
 let querySnapshot = await db.collection('events').get()
-
 let events = querySnapshot.docs
+
 for (let i=0; i<events.length; i++) {
    let eventId = events[i].id
    let event = events[i].data()

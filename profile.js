@@ -31,8 +31,8 @@ firebase.auth().onAuthStateChanged(async function (user) {
        let currenteventId = currentevents[i].id
        let currentevent = currentevents[i].data()
        let currenteventText = currentevent.text
-       let docRef = await db.collection('selected').doc(`${currenteventId}-${user.uid}`).get()
-       let selectedQuestion = docRef.data()
+       //let docRef = await db.collection('selected').doc(`${currenteventId}-${user.uid}`).get()
+       //let selectedQuestion = docRef.data()
        //let opacityClass = ''
       // if(selectedQuestion) {
         // opacityClass = 'opacity-20'

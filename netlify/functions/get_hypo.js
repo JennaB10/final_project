@@ -9,7 +9,6 @@ exports.handler = async function(event) {
    // let queryStringUserId = event.queryStringParameters.userId
 
     let querySnapshot = await db.collection('hypotheticalevents') 
-                               // .where('userId', '==', queryStringUserId)
                                 .get()
                           
    console.log(`number of hypotheticalevents: ${querySnapshot.size}`)
