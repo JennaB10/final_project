@@ -6,10 +6,10 @@ firebase.auth().onAuthStateChanged(async function(user) {
     // Signed in
     console.log('signed in')
    
-    db.collection('users').doc(user.uid).set({ 
-      name: user.displayName,
-      email: user.email
-    })
+    // db.collection('users').doc(user.uid).set({ 
+    //   name: user.displayName,
+    //   email: user.email
+    // })
 
         // Create a sign-out button
         document.querySelector('.sign-in-or-sign-out').innerHTML = `
@@ -35,7 +35,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
       signInOptions: [
         firebase.auth.EmailAuthProvider.PROVIDER_ID
       ],
-      signInSuccessUrl: 'home.html'
+      signInSuccessUrl: 'index.html'
     }
 
     // Starts FirebaseUI Auth
