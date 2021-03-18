@@ -8,4 +8,6 @@ ID12: Ice breaker question generator to help get past small talk during zoom gat
 
  - select the types of questions you want (e.g., hypothetical scenarios, life experiences, philosophy, etc.)- - get shown questions based on your selections in a list view. MVP will feature hypothetical scenario question functionality only 
 
+Application URL: icebreakerz.netlify.app
+
 KIEI-451 Winter 2021
