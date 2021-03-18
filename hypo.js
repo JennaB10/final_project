@@ -5,11 +5,7 @@ firebase.auth().onAuthStateChanged(async function (user) {
     // Signed in
     console.log('signed in')
 
-    // db.collection('users').doc(user.uid).set({ 
-    //   name: user.displayName,
-    //   email: user.email
-    //  })
-    // Create a sign-out button
+        // Create a sign-out button
     document.querySelector('.sign-in-or-sign-out').innerHTML = `
         <button class="text-pink-500 underline sign-out">Sign Out</button>
       `
@@ -27,10 +23,7 @@ firebase.auth().onAuthStateChanged(async function (user) {
     //let hypotheticalevents = querySnapshot.docs
     for (let i = 0; i < hypotheticalevents.length; i++) {
       let hypotheticaleventId = hypotheticalevents[i].id
-      //let hypotheticalevent = hypotheticalevents[i].data()
       let hypotheticaleventText = hypotheticalevents[i].text
-      //let docRef = await db.collection('selected').doc(`${user.uid}`).get() //not sure we need lines 33 if we have defined in 24
-      //let selectedQuestion = docRef.data() //docRef with response
       let response = await fetch(`/.netlify/functions/get_selected?userId=${user.uid}`)
       let selectedQuestion = await response.json()
       let opacityClass = ''
@@ -128,7 +121,7 @@ firebase.auth().onAuthStateChanged(async function (user) {
       signInOptions: [
         firebase.auth.EmailAuthProvider.PROVIDER_ID
       ],
-      signInSuccessUrl: 'index.html'
+      signInSuccessUrl: 'categories.html'
     }
     // Starts FirebaseUI Auth
     ui.start('.sign-in-or-sign-out', authUIConfig)
