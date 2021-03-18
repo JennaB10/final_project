@@ -28,16 +28,16 @@ firebase.auth().onAuthStateChanged(async function (user) {
 
     for (let i = 0; i < selectedQuestions.length; i++) {
       let selectedQuestionId = selectedQuestions[i].id
-      let text = selectedQuestions[i].text
+      let selectedQuestionText = selectedQuestions[i].text
       let opacityClass = ''
       if (selectedQuestions) {
         opacityClass = 'opacity-20'
       }
 
-    document.querySelector('.selectedQuestions').insertAdjacentHTML('beforeend', `
-   <div class="selectedQuestion-${selectedQuestionId} ${opacityClass}  py-4 text-xl border-b-2 border-purple-500 w-full">
+    document.querySelector('.selected').insertAdjacentHTML('afterend', `
+   <div class="selected-${selectedQuestionId} ${opacityClass}  py-4 text-xl border-b-2 border-purple-500 w-full">
      <a href="#" class="done p-2 text-sm bg-green-500 text-white">✓</a>
-     ${text}
+     ${selectedQuestionText}
    </div>
  `)
 
