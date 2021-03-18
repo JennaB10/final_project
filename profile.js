@@ -22,67 +22,45 @@ firebase.auth().onAuthStateChanged(async function (user) {
       document.location.href = 'login.html'
     })
 
-    //let querySnapshot = await db.collection('selected').where('userId', '==', user.uid).get()
-    let response = await fetch(`/.netlify/functions/get_profile?userId=${user.uid}`)
-    let profile = await response.json()
+    //Render all questions when the page is loaded
+    let response = await fetch(`/.netlify/functions/get_selected?userId=${user.uid}`)
+    let selectedQuestions = await response.json()
 
-    let currentevents = querySnapshot.docs
-    for (let i=0; i<currentevents.length; i++) {
-       let currenteventId = currentevents[i].id
-       let currentevent = currentevents[i].data()
-       let currenteventText = currentevent.text
-       //let docRef = await db.collection('selected').doc(`${currenteventId}-${user.uid}`).get()
-       //let selectedQuestion = docRef.data()
-       //let opacityClass = ''
-      // if(selectedQuestion) {
-        // opacityClass = 'opacity-20'
-      // }
-      // renderPost(currenteventsText)
+    for (let i = 0; i < selectedQuestions.length; i++) {
+      let selectedQuestionId = selectedQuestions[i].id
+      let text = selectedQuestions[i].text
+      let opacityClass = ''
+      if (selectedQuestions) {
+        opacityClass = 'opacity-20'
+      }
 
-       document.querySelector('.currentevents').insertAdjacentHTML('beforeend', `
-       <div class="currentevent-${currenteventId} py-4 text-xl border-b-2 border-purple-500 w-full">
-         
-         ${currenteventText}
-       </div>
-     `) //after this line check if opacity needed
-     
-     //if statement - check database for currenteventid-userid 
-     //if found, then ad opacity (same as 79)
+    document.querySelector('.selectedQuestions').insertAdjacentHTML('beforeend', `
+   <div class="selectedQuestion-${selectedQuestionId} ${opacityClass}  py-4 text-xl border-b-2 border-purple-500 w-full">
+     <a href="#" class="done p-2 text-sm bg-green-500 text-white">✓</a>
+     ${text}
+   </div>
+ `)
 
-     //document.querySelector(`.currentevent-${currenteventId} .done`).addEventListener('click', async function(event) {
-      // event.preventDefault()
-     //  let currentElement = document.querySelector(`.currentevent-${currenteventId}`)
-      // currentElement.classList.add('opacity-20')  //if statement
-       await db.collection('selected').doc(`${currenteventId}-${user.uid}`).set({}) //instead of set //change to selected?
+//  document.querySelector(`.selectedQuestions-${selectedQuestionId} .done`).addEventListener('click', async function (event) {
+//   event.preventDefault()
+//   console.log(`eventselected I can't think of something`)
+  //let Element = document.querySelector(`.selectedQuestions-${selectedQuestionId}`)
+ 
+  // let response = await fetch(`/.netlify/functions/create_selected`, { //create a new netlify for create
+  //   method: 'POST',
+  //   body: JSON.stringify({ // JSON has data in it if you want to send it to netlify then need to use stringify
+  //     //the one on the left is what the post itself will expect and the one on the right is whatever you named the variable
+  //     userId: user.uid, //can call all of these whatever we want we just need to call it on the other side in our lamda function (create_posts.js) //uid is a unique identifier
+  //     text: text,
+  //     userId: userId
     // })
-   // }
-
-//  // Show only my to-dos
-//  let response = await fetch(`/.netlify/functions/get_todos?userId=${user.uid}`)
-//  let todos = await response.json()
-//  console.log(todos)
-
-//  for (let i=0; i<todos.length; i++) {
-//    let todo = todos[i]
-//    let todoId = todo.id
-//    let todoText = todo.text
-
-//    document.querySelector('.todos').insertAdjacentHTML('beforeend', `
-//      <div class="todo-${todoId} py-4 text-xl border-b-2 border-purple-500 w-full">
-//        <a href="#" class="done p-2 text-sm bg-green-500 text-white">✓</a>
-//        ${todoText}
-//      </div>
-//    `)
-
-//    document.querySelector(`.todo-${todoId} .done`).addEventListener('click', async function(event) {
-//      event.preventDefault()
-//      document.querySelector(`.todo-${todoId}`).classList.add('opacity-20')
-//      await db.collection('todos').doc(todoId).delete()
-//    })
-  }
-
-
-
+  // })
+  // if (response.ok) {
+  //   Element.classList.add('opacity-20')
+  // }
+//})
+}
+  
 
   } else {
     // Signed out
@@ -96,7 +74,7 @@ firebase.auth().onAuthStateChanged(async function (user) {
       signInOptions: [
         firebase.auth.EmailAuthProvider.PROVIDER_ID
       ],
-      signInSuccessUrl: 'home.html'
+      signInSuccessUrl: 'index.html'
     }
 
     // Starts FirebaseUI Auth
